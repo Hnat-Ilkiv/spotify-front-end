@@ -1,3 +1,19 @@
-<h1>Spotify Manager</h1>
-<a href="{{ url_for('list_users') }}">Користувачі</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spotify Manager</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body>
+    <h1>Spotify Manager</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('list_users') }}">Користувачі</a></li>
+            <!-- Тут можна додати інші посилання на плейлисти, пісні і т.д. -->
+        </ul>
+    </nav>
+</body>
+</html>
 

@@ -11,7 +11,9 @@ pkgs.mkShell {
 
   shellHook = ''
     alias main="python -m src.main"
-    alias app="python -m src.app"
+    export FLASK_APP=src.app
+    export FLASK_ENV=development
+    export PYTHONPATH=$PYTHONPATH:$(pwd)
     echo "Spotify App Dev Environment Ready"
     pytest
   '';
