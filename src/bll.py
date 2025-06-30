@@ -12,8 +12,45 @@ class ISpotifyService(ABC):
         pass
 
     @abstractmethod
-    def list_users(self):
+    def get_all_users(self):
         pass
+
+    @abstractmethod
+    def get_user_by_id(self, user_id):
+        pass
+
+    @abstractmethod
+    def add_user(self, username):
+        pass
+
+    @abstractmethod
+    def update_user(self, user_id, username):
+        pass
+
+    @abstractmethod
+    def delete_user(self, user_id):
+        pass
+
+    @abstractmethod
+    def get_all_playlists_by_user_id(self, user_id):
+        pass
+
+    @abstractmethod
+    def add_playlist(self, user_id, playlist_name):
+        pass
+
+    @abstractmethod
+    def get_playlist_by_id(self, playlist_id):
+        pass
+
+    @abstractmethod
+    def update_playlist(self, playlist_id, new_name):
+        pass
+
+    @abstractmethod
+    def delete_playlist(self, playlist_id):
+        pass
+
 
 class SpotifyService(ISpotifyService):
     def __init__(self, user_repo: IUserRepository, playlist_repo: IPlaylistRepository, song_repo: ISongRepository):
@@ -55,8 +92,8 @@ class SpotifyService(ISpotifyService):
                     user = user_ids[user_id]
 
                 if playlist_id not in playlist_ids:
-                    playlist = Playlist(name=playlist_name, user=user, id=playlist_id)
-                    self.playlist_repo.add_playlist(playlist)
+                    playlist = Playlist(name=playlist_name, user=user, user_id=user_id, id=playlist_id)
+                    self.playlist_repo.add_playlist(playlist, playlist.user_id)
                     playlist_ids[playlist_id] = playlist
                 else:
                     playlist = playlist_ids[playlist_id]
@@ -94,6 +131,55 @@ class SpotifyService(ISpotifyService):
                 print(f"- DB size:        {file_size(db_path)}")
                 print(f"- Importing time: {str_time}")
 
-    def list_users(self):
+    def get_all_users(self):
         return self.user_repo.get_all_users()
+
+    def get_user_by_id(self, user_id):
+        return self.user_repo.get_user_by_id(user_id)
+
+    def add_user(self, username):
+        return self.user_repo.add_user(username)
+
+    def update_user(self, user_id, username):
+        return self.user_repo.update_user(user_id, username)
+
+    def delete_user(self, user_id):
+        return self.user_repo.delete_user(user_id)
+
+    def get_all_playlists_by_user_id(self, user_id):
+        return self.playlist_repo.get_all_playlists_by_user_id(user_id)
+
+    def add_playlist(self, user_id, playlist_name):
+        new_playlist = Playlist(name=playlist_name, user=self.get_user_by_id(user_id), user_id=user_id)
+        self.playlist_repo.add_playlist(new_playlist, user_id)
+
+    def get_playlist_by_id(self, playlist_id):
+        return self.playlist_repo.get_playlist_by_id(playlist_id)
+
+    def update_playlist(self, playlist_id, new_name):
+        return self.playlist_repo.update_playlist(playlist_id, new_name)
+
+    def delete_playlist(self, playlist_id):
+        return self.playlist_repo.delete_playlist(playlist_id)
+
+    def get_all_songs_by_playlist_id(self, playlist_id):
+        return self.song_repo.get_all_songs_by_playlist_id(playlist_id)
+
+    def add_song_to_playlist(self, playlist_id, song_title, song_artist):
+        playlist = self.get_playlist_by_id(playlist_id)
+        if not playlist:
+            return None
+
+        song = Song(title=song_title, artist=song_artist, playlists=[playlist])
+        self.song_repo.add_song(song)
+        return song
+
+    def get_song_by_id(self, song_id):
+        return self.song_repo.get_song_by_id(song_id)
+
+    def update_song(self, song_id, new_title, new_artist):
+        return self.song_repo.update_song(song_id, new_title, new_artist)
+
+    def delete_song(self, song_id):
+        return self.song_repo.delete_song(song_id)
 

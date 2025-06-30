@@ -1,3 +1,4 @@
+from typing import Union
 from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 from src.models import User, Playlist, Song
@@ -5,7 +6,7 @@ from src.models import User, Playlist, Song
 # Абстрактні інтерфейси
 class IUserRepository(ABC):
     @abstractmethod
-    def add_user(self, user: User):
+    def add_user(self, user_or_username: Union[User, str]):
         pass
 
     @abstractmethod
@@ -27,7 +28,7 @@ class IUserRepository(ABC):
 
 class IPlaylistRepository(ABC):
     @abstractmethod
-    def add_playlist(self, playlist: Playlist):
+    def add_playlist(self, playlist_or_playlistname: Union[Playlist, str], user_id: str):
         pass
 
     @abstractmethod
@@ -82,7 +83,14 @@ class UserRepository(IUserRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_user(self, user: User):
+    def add_user(self, user_or_username: Union[User, str]):
+        if isinstance(user_or_username, User):
+            user = user_or_username
+        elif isinstance(user_or_username, str):
+            user = User(username=user_or_username)
+        else:
+            raise ValueError('Invalid type for add_user: expected User or str')
+
         self.session.add(user)
         self.session.commit()
 
@@ -110,7 +118,14 @@ class PlaylistRepository(IPlaylistRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_playlist(self, playlist: Playlist):
+    def add_playlist(self, playlist_or_playlistname: Union[Playlist, str], user_id: str):
+        if isinstance(playlist_or_playlistname, Playlist):
+            playlist = playlist_or_playlistname
+        elif isinstance(playlist_or_playlistname, str):
+            playlist = Playlist(name=playlist_or_playlistname, user_id=user_id)
+        else:
+            raise ValueError('Invalid type for add_playlist: expected Playlist or str')
+
         self.session.add(playlist)
         self.session.commit()
 
@@ -159,10 +174,11 @@ class SongRepository(ISongRepository):
     def get_all_songs(self):
         return self.session.query(Song).all()
 
-    def update_song(self, song_id: str, new_title: str):
+    def update_song(self, song_id: str, new_title: str, new_artist: str):
         song = self.get_song_by_id(song_id)
         if song:
             song.title = new_title
+            song.artist = new_artist
             self.session.commit()
         return song
 

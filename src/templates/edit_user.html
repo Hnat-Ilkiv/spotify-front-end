@@ -1,6 +1,22 @@
-<h1>Додати користувача</h1>
-<form method="POST">
-  <input type="text" name="username" placeholder="Username" required>
-  <button type="submit">Зберегти</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Редагувати' if user else 'Додати' }} користувача</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body>
+    <h1>{{ 'Редагувати' if user else 'Додати' }} користувача</h1>
+
+    <form method="POST">
+        <label for="username">Ім'я користувача:</label><br>
+        <input type="text" id="username" name="username" placeholder="Username" required value="{{ user.username if user else '' }}">
+        <br><br>
+        <button type="submit">Зберегти</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('list_users') }}">Назад до списку</a>
+</body>
+</html>
 
