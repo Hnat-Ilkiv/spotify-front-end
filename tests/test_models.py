@@ -35,7 +35,7 @@ def test_add_songs_to_playlist(session):
     session.add(user)
     session.commit()
 
-    playlist = Playlist(name='Test Playlist', user=user)
+    playlist = Playlist(name='Test Playlist', user=user, user_id=user.id)
     song1 = Song(title='Song 1', artist='Artist 1')
     song2 = Song(title='Song 2', artist='Artist 2')
 
@@ -59,8 +59,8 @@ def test_song_can_exist_in_multiple_playlists(session):
     session.add(user)
     session.commit()
 
-    playlist1 = Playlist(name='Playlist 1', user=user)
-    playlist2 = Playlist(name='Playlist 2', user=user)
+    playlist1 = Playlist(name='Playlist 1', user=user, user_id=user.id)
+    playlist2 = Playlist(name='Playlist 2', user=user, user_id=user.id)
     song = Song(title='Common Song', artist='Artist X')
 
     playlist1.songs.append(song)

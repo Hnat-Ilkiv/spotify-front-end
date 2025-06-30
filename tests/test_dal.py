@@ -47,8 +47,8 @@ def test_playlist_repository_crud(session):
     user_repo.add_user(user)
 
     # Create
-    playlist = Playlist(name='My Playlist', user=user)
-    playlist_repo.add_playlist(playlist)
+    playlist = Playlist(name='My Playlist', user=user, user_id=user.id)
+    playlist_repo.add_playlist(playlist, playlist.user_id)
     playlists = playlist_repo.get_all_playlists_by_user_id(user.id)
     assert len(playlists) == 1
     assert playlists[0].name == 'My Playlist'
@@ -84,9 +84,10 @@ def test_song_repository_crud(session):
     assert fetched_song.artist == 'Test Artist'
 
     # Update
-    song_repo.update_song(fetched_song.id, 'Updated Song')
+    song_repo.update_song(fetched_song.id, 'Updated Song', 'Updated Artist')
     updated_song = song_repo.get_song_by_id(fetched_song.id)
     assert updated_song.title == 'Updated Song'
+    assert updated_song.artist == 'Updated Artist'
 
     # Delete
     song_repo.delete_song(fetched_song.id)
@@ -103,8 +104,8 @@ def test_add_song_to_playlist(session):
     user_repo.add_user(user)
 
     # Створюємо плейліст
-    playlist = Playlist(name='Chill', user=user)
-    playlist_repo.add_playlist(playlist)
+    playlist = Playlist(name='Chill', user=user, user_id=user.id)
+    playlist_repo.add_playlist(playlist, playlist.user_id)
 
     # Створюємо пісню
     song = Song(title='Relaxing Tune', artist='Chil Cat')

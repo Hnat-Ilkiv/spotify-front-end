@@ -28,7 +28,7 @@ def test_import_single_user(service):
     generate_spotify_csv(filename=csv_path, users=1, playlists=1, songs=20)
 
     service.import_from_csv(csv_path)
-    users = service.list_users()
+    users = service.get_all_users()
 
     assert len(users) == 1
     assert len(users[0].playlists) >= 1
@@ -46,7 +46,7 @@ def test_import_multiple_users(service):
     generate_spotify_csv(filename=csv_path, users=5, playlists=20, songs=40)
 
     service.import_from_csv(csv_path)
-    users = service.list_users()
+    users = service.get_all_users()
 
     assert len(users) == 5
     for user in users:
@@ -65,7 +65,7 @@ def test_import_empty_csv(service):
         writer.writerow(['UserId', 'Username', 'PlaylistId', 'PlaylistName', 'SongId', 'SongTitle', 'Artist'])  # headers only
 
     service.import_from_csv(csv_path)
-    users = service.list_users()
+    users = service.get_all_users()
     assert len(users) == 0
 
     os.remove(csv_path)
@@ -81,7 +81,7 @@ def test_user_playlist_song_relationship(service):
     generate_spotify_csv(filename=csv_path, users=1, playlists=1, songs=30)
 
     service.import_from_csv(csv_path)
-    users = service.list_users()
+    users = service.get_all_users()
 
     user = users[0]
     assert len(user.playlists) == 1
