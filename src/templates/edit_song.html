@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ 'Редагувати' if song else 'Додати' }} пісню</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body>
+    <h1>{{ 'Редагувати' if song else 'Додати' }} пісню</h1>
+    <form method="POST">
+        <input type="text" name="title" placeholder="Назва пісні" required value="{{ song.title if song else '' }}">
+        <input type="text" name="artist" placeholder="Виконавець пісні" required value="{{ song.artist if song else '' }}">
+        <button type="submit">Зберегти</button>
+    </form>
+    <a href="{{ url_for('list_songs', playlist_id=playlist.id) }}">Назад до пісень</a>
+</body>
+</html>
+
