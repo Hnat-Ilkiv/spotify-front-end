@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Плейлисти користувача {{ user.username }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body>
+    <h1>Плейлисти користувача {{ user.username }}</h1>
+    <ul>
+        {% for playlist in playlists %}
+            <li>
+                {{ playlist.name }}
+                <a href="{{ url_for('list_songs', playlist_id=playlist.id) }}">Переглянути пісні</a> |
+                <a href="{{ url_for('edit_playlist', playlist_id=playlist.id) }}">Редагувати</a>
+                <form action="{{ url_for('delete_playlist', playlist_id=playlist.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Видалити плейлист?')">Видалити</button>
+                </form>
+           </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('add_playlist', user_id=user.id) }}">Додати плейлист</a> |
+    <a href="{{ url_for('list_users') }}">Назад до користувачів</a>
+</body>
+</html>
+

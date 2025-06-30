@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ 'Редагувати' if playlist else 'Додати' }} плейлист</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+<body>
+    <h1>{{ 'Редагувати' if playlist else 'Додати' }} плейлист</h1>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Назва плейлиста" required value="{{ playlist.name if playlist else '' }}">
+        <button type="submit">Зберегти</button>
+    </form>
+    <a href="{{ url_for('list_playlists', user_id=user.id) }}">Назад до плейлистів</a>
+</body>
+</html>
+
